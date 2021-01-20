@@ -1,15 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import "./../styles/App.css";
+import ListItem from "./ListItem";
 
-function App() 
-{
-	return (
-	<div id="main">
-	//Do not alter main div
-	//Please do not alter the functional component as tests depend on the type of component.
-	</div>
-	);
+function App() {
+  const [items, setItems] = useState([]);
+  const [newItem, setNewItem] = useState("");
+  const addItem = () => {
+    items.push(newItem);
+    setItems([...items]);
+    setNewItem("");
+  };
+  const newChangeItem = (e) => {
+    //console.log(e.target.value);
+    setNewItem(e.target.value);
+  };
+  const deleteHandler = (itemIdx) => {
+    items.splice(itemIdx, 1);
+    setItems([...items]);
+  };
+  const editTaskHandler = (editedValue, idx) => {
+    items[idx] = editedValue;
+    setItems([...items]);
+  };
+  return (
+    <div id="main">
+      <textarea id="task" onChange={newChangeItem} value={newItem}></textarea>
+      <button id="btn" onClick={addItem} disabled={newItem.trim().length === 0}>
+        Add Item
+      </button>
+      {items.map((item, idx) => (
+        <ListItem
+          item={item}
+          key={`${item}_${idx}`}
+          idx={idx}
+          editTask={editTaskHandler}
+          deleteTask={deleteHandler}
+        />
+      ))}
+    </div>
+  );
 }
-
 
 export default App;
